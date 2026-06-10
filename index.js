@@ -162,10 +162,11 @@ client.on('disconnected', (reason) => {
     clientStatus = 'Disconnected (Requires Re-Scan)';
     qrImage = null;
     
-    // In some cases, it's safer to restart the process here if running on a server,
-    // but whatsapp-web.js will try to re-initialize or you can call client.initialize() again.
-    // For now, we will destroy and re-initialize so it generates a new QR code.
-    client.destroy().then(() => client.initialize());
+    // On a low-memory PM2 server, destroying Puppeteer often hangs due to folder locks.
+    // The most bulletproof way to generate a new QR code is to force crash the app
+    // and let PM2 instantly and cleanly restart it from scratch.
+    console.log('Force restarting the bot to generate a new QR code...');
+    process.exit(1);
 });
 
 // Triggers when a new message is received
