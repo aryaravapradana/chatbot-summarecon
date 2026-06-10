@@ -66,8 +66,8 @@ const puppeteerOptions = {
         '--no-zygote',
         '--disable-gpu'
     ],
-    timeout: 60000,
-    protocolTimeout: 60000
+    timeout: 0,
+    protocolTimeout: 0
 };
 
 // If running locally on Windows, use local Chrome. If on Render (Linux), use their Chrome.
