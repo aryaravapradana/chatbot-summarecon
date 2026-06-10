@@ -83,11 +83,11 @@ app.get('/', (req, res) => {
                 <div class="container">
                     <h1>Pengaduan Management Bot</h1>
                     <div class="status">Status: 
-                        <span class="\${clientStatus === 'Connected' ? 'success' : 'error'}">\${clientStatus}</span>
+                        <span class="${clientStatus === 'Connected' ? 'success' : 'error'}">${clientStatus}</span>
                     </div>
-                    \${qrImage ? \`<div class="qr-container"><p>Please scan this QR code using your WhatsApp Linked Devices:</p><img src="\${qrImage}" alt="QR Code" /></div>\` : ''}
+                    ${qrImage ? `<div class="qr-container"><p>Please scan this QR code using your WhatsApp Linked Devices:</p><img src="${qrImage}" alt="QR Code" /></div>` : ''}
                     
-                    \${instructionHTML}
+                    ${instructionHTML}
                 </div>
             </body>
         </html>
