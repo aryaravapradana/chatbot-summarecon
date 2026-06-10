@@ -1,0 +1,7 @@
+node_modules/
+.env
+.wwebjs_auth/
+reports.json
+*.json
+!package.json
+!package-lock.json
