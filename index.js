@@ -13,22 +13,69 @@ let clientStatus = 'Initializing...';
 
 // The main page that the client will see to check status or scan QR
 app.get('/', (req, res) => {
+    let instructionHTML = '';
+    
+    if (clientStatus === 'Initializing...') {
+        instructionHTML = `
+            <div class="instructions" style="text-align: center;">
+                <h3>⏳ Mohon Tunggu...</h3>
+                <p>Sistem sedang menyiapkan aplikasi. Proses ini bisa memakan waktu beberapa menit karena server sedang melakukan booting.</p>
+            </div>
+        `;
+    } else if (clientStatus === 'Connected') {
+        instructionHTML = `
+            <div class="instructions">
+                <h3>✅ Sistem Aktif & Siap Digunakan</h3>
+                <ol>
+                    <li>Bot sudah berjalan 100% otomatis di background selama 24 jam penuh. Anda sudah boleh menutup halaman web ini.</li>
+                    <li><strong>Mengecek Daftar Keluhan:</strong> Semua pesan keluhan warga akan otomatis diketik dan disusun rapi ke dalam <a href="https://docs.google.com/spreadsheets/d/1HuCkq8Fm74R5B7Kiioovn5DBKw7KbexOUBXDNk6sXlA/edit?usp=sharing" target="_blank" style="color: #128C7E; font-weight: bold; text-decoration: underline;">Google Sheet Pengaduan</a> Anda. Anda tidak perlu melihatnya di web ini lagi.</li>
+                </ol>
+            </div>
+        `;
+    } else {
+        instructionHTML = `
+            <div class="instructions">
+                <h3>📖 Panduan Cara Mengaktifkan Bot</h3>
+                <ol>
+                    <li><strong>📱 BUKA DI PERANGKAT LAIN:</strong> Pastikan Anda membuka halaman web (link Bitly) ini di Laptop atau HP <em>lain</em> (bukan di HP Pengaduan), supaya layar ini menampilkan QR Code yang bisa Anda scan.</li>
+                    <li><strong>🚨 PENTING:</strong> Silakan scan QR Code di atas <strong>HANYA MENGGUNAKAN Akun WhatsApp yang akan dijadikan sebagai Nomor Resmi Pengaduan</strong>. Jangan di-scan menggunakan nomor pribadi Anda! <br><em>(Buka aplikasi WhatsApp di HP Pengaduan ➔ ketuk menu Perangkat Taut / Linked Devices ➔ lalu arahkan kamera ke gambar QR di layar ini).</em></li>
+                    <li><strong>Tunggu Proses Loading:</strong> Setelah di-scan, HP Anda mungkin akan menampilkan tulisan "Masuk / Logging in" yang bisa memakan waktu hingga 5 menit. <strong>Tolong bersabar!</strong> Jangan di-refresh atau ditutup halamannya sampai Status di atas berubah menjadi <span style="color: #25D366; font-weight: bold;">Connected</span>.</li>
+                    <li><strong>Catatan Penting:</strong> Anda hanya perlu melakukan scan QR Code ini <em>satu kali saja seumur hidup</em>. Anda tidak perlu repot-repot scan ulang besok-besok, kecuali Anda tidak sengaja memencet tombol "Keluar / Log out" di HP.</li>
+                </ol>
+            </div>
+        `;
+    }
+
     res.send(`
-        <html>
+        <!DOCTYPE html>
+        <html lang="id">
             <head>
+                <meta charset="UTF-8">
+                <meta name="viewport" content="width=device-width, initial-scale=1.0">
                 <title>WhatsApp Bot Dashboard</title>
                 <style>
-                    body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; text-align: center; margin-top: 50px; background-color: #f0f2f5; }
-                    .container { max-width: 800px; margin: 0 auto; background: white; padding: 40px; border-radius: 10px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
-                    h1 { color: #128C7E; }
-                    .status { font-size: 22px; font-weight: bold; margin-bottom: 20px; color: #333; }
-                    .qr-container { margin: 20px auto; padding: 20px; border: 2px dashed #128C7E; display: inline-block; border-radius: 10px; background: #fff; }
-                    .qr-container p { font-size: 18px; color: #555; }
+                    body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; text-align: center; margin: 0; padding: 20px; background-color: #f0f2f5; }
+                    .container { max-width: 800px; width: 100%; box-sizing: border-box; margin: 20px auto; background: white; padding: 30px 20px; border-radius: 10px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
+                    h1 { color: #128C7E; font-size: 24px; margin-top: 0; }
+                    .status { font-size: 20px; font-weight: bold; margin-bottom: 20px; color: #333; padding: 10px; background: #f9f9f9; border-radius: 5px; }
+                    .qr-container { margin: 15px auto; padding: 15px; border: 2px dashed #128C7E; display: inline-block; border-radius: 10px; background: #fff; max-width: 100%; box-sizing: border-box; }
+                    .qr-container p { font-size: 16px; color: #555; margin-top: 0; }
+                    .qr-container img { max-width: 100%; height: auto; }
                     .success { color: #25D366; }
                     .error { color: #d9534f; }
-                    .instructions { text-align: left; margin-top: 30px; padding: 20px; background: #e9f5f4; border-radius: 8px; border-left: 5px solid #128C7E; }
-                    .instructions h3 { margin-top: 0; color: #128C7E; }
-                    .instructions ol { padding-left: 20px; line-height: 1.6; color: #444; font-size: 16px; }
+                    .instructions { text-align: left; margin-top: 25px; padding: 20px; background: #e9f5f4; border-radius: 8px; border-left: 5px solid #128C7E; }
+                    .instructions h3 { margin-top: 0; color: #128C7E; font-size: 18px; }
+                    .instructions ol { padding-left: 20px; line-height: 1.6; color: #444; font-size: 15px; margin-bottom: 0; }
+                    .instructions li { margin-bottom: 10px; }
+                    
+                    /* Mobile Adjustments */
+                    @media (max-width: 600px) {
+                        .container { padding: 20px 15px; margin: 10px auto; }
+                        h1 { font-size: 22px; }
+                        .status { font-size: 18px; }
+                        .instructions { padding: 15px; }
+                        .instructions ol { padding-left: 15px; font-size: 14px; }
+                    }
                 </style>
                 <meta http-equiv="refresh" content="5">
             </head>
@@ -36,20 +83,11 @@ app.get('/', (req, res) => {
                 <div class="container">
                     <h1>Pengaduan Management Bot</h1>
                     <div class="status">Status: 
-                        <span class="${clientStatus === 'Connected' ? 'success' : 'error'}">${clientStatus}</span>
+                        <span class="\${clientStatus === 'Connected' ? 'success' : 'error'}">\${clientStatus}</span>
                     </div>
-                    ${qrImage ? `<div class="qr-container"><p>Please scan this QR code using your WhatsApp Linked Devices:</p><img src="${qrImage}" alt="QR Code" /></div>` : ''}
+                    \${qrImage ? \`<div class="qr-container"><p>Please scan this QR code using your WhatsApp Linked Devices:</p><img src="\${qrImage}" alt="QR Code" /></div>\` : ''}
                     
-                    <div class="instructions">
-                        <h3>📖 Panduan Cara Penggunaan</h3>
-                        <ol>
-                            <li><strong>🚨 PENTING - Cara Mengaktifkan Bot:</strong> Silakan scan QR Code di atas <strong>HANYA MENGGUNAKAN Akun WhatsApp yang akan dijadikan sebagai Nomor Resmi Pengaduan</strong>. Jangan di-scan menggunakan nomor pribadi Anda! <br><em>(Buka aplikasi WhatsApp di HP tersebut ➔ ketuk menu Perangkat Taut / Linked Devices ➔ lalu arahkan kamera ke gambar QR).</em></li>
-                            <li><strong>Tunggu Proses Loading:</strong> Setelah di-scan, HP Anda mungkin akan menampilkan tulisan "Masuk / Logging in" yang bisa memakan waktu hingga 5 menit. <strong>Tolong bersabar!</strong> Jangan di-refresh atau ditutup halamannya sampai Status di atas berubah menjadi <span style="color: #25D366; font-weight: bold;">Connected</span>.</li>
-                            <li><strong>Sudah Selesai!</strong> Jika status sudah Connected, berarti bot sudah siap bekerja otomatis 24 jam penuh. Anda sudah boleh menutup halaman web ini.</li>
-                            <li><strong>Mengecek Daftar Keluhan:</strong> Semua pesan keluhan akan otomatis diketik dan disusun rapi ke dalam <a href="https://docs.google.com/spreadsheets/d/1HuCkq8Fm74R5B7Kiioovn5DBKw7KbexOUBXDNk6sXlA/edit?usp=sharing" target="_blank" style="color: #128C7E; font-weight: bold; text-decoration: underline;">Google Sheet Pengaduan</a> Anda. Anda tidak perlu melihatnya di web ini lagi.</li>
-                            <li><strong>Catatan Penting:</strong> Anda hanya perlu melakukan scan QR Code ini <em>satu kali saja seumur hidup</em>. Anda tidak perlu repot-repot scan ulang besok-besok, kecuali Anda tidak sengaja memencet tombol "Keluar / Log out" di HP.</li>
-                        </ol>
-                    </div>
+                    \${instructionHTML}
                 </div>
             </body>
         </html>
