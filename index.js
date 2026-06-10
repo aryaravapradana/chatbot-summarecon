@@ -57,7 +57,18 @@ app.listen(port, () => {
 
 // 2. Initialize the WhatsApp client
 const puppeteerOptions = {
-    args: ['--no-sandbox', '--disable-setuid-sandbox']
+    args: [
+        '--no-sandbox', 
+        '--disable-setuid-sandbox',
+        '--disable-dev-shm-usage',
+        '--disable-accelerated-2d-canvas',
+        '--no-first-run',
+        '--no-zygote',
+        '--single-process',
+        '--disable-gpu'
+    ],
+    timeout: 60000,
+    protocolTimeout: 60000
 };
 
 // If running locally on Windows, use local Chrome. If on Render (Linux), use their Chrome.
