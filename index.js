@@ -1,4 +1,5 @@
 const express = require('express');
+const fs = require('fs');
 const { Client, LocalAuth } = require('whatsapp-web.js');
 const qrcodeTerminal = require('qrcode-terminal'); // Still useful for local testing
 const qrcode = require('qrcode'); // To generate Web QR
@@ -156,11 +157,23 @@ client.on('ready', () => {
     qrImage = null; // Clear QR code from the website
 });
 
+client.on('auth_failure', msg => {
+    console.error('AUTHENTICATION FAILURE', msg);
+    if (fs.existsSync('.wwebjs_auth')) {
+        fs.rmSync('.wwebjs_auth', { recursive: true, force: true });
+    }
+    process.exit(1);
+});
+
 // Triggers if the client forcibly logs out from their phone
 client.on('disconnected', (reason) => {
     console.log('Client was logged out', reason);
     clientStatus = 'Disconnected (Requires Re-Scan)';
     qrImage = null;
+    
+    if (fs.existsSync('.wwebjs_auth')) {
+        fs.rmSync('.wwebjs_auth', { recursive: true, force: true });
+    }
     
     // On a low-memory PM2 server, destroying Puppeteer often hangs due to folder locks.
     // The most bulletproof way to generate a new QR code is to force crash the app
