@@ -19,15 +19,17 @@ app.get('/', (req, res) => {
                 <title>WhatsApp Bot Dashboard</title>
                 <style>
                     body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; text-align: center; margin-top: 50px; background-color: #f0f2f5; }
-                    .container { max-width: 600px; margin: 0 auto; background: white; padding: 40px; border-radius: 10px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
+                    .container { max-width: 800px; margin: 0 auto; background: white; padding: 40px; border-radius: 10px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
                     h1 { color: #128C7E; }
                     .status { font-size: 22px; font-weight: bold; margin-bottom: 20px; color: #333; }
                     .qr-container { margin: 20px auto; padding: 20px; border: 2px dashed #128C7E; display: inline-block; border-radius: 10px; background: #fff; }
                     .qr-container p { font-size: 18px; color: #555; }
                     .success { color: #25D366; }
                     .error { color: #d9534f; }
+                    .instructions { text-align: left; margin-top: 30px; padding: 20px; background: #e9f5f4; border-radius: 8px; border-left: 5px solid #128C7E; }
+                    .instructions h3 { margin-top: 0; color: #128C7E; }
+                    .instructions ol { padding-left: 20px; line-height: 1.6; color: #444; font-size: 16px; }
                 </style>
-                <!-- Auto-refresh the page every 5 seconds so they don't have to manually refresh to see the QR code update -->
                 <meta http-equiv="refresh" content="5">
             </head>
             <body>
@@ -37,6 +39,17 @@ app.get('/', (req, res) => {
                         <span class="${clientStatus === 'Connected' ? 'success' : 'error'}">${clientStatus}</span>
                     </div>
                     ${qrImage ? `<div class="qr-container"><p>Please scan this QR code using your WhatsApp Linked Devices:</p><img src="${qrImage}" alt="QR Code" /></div>` : ''}
+                    
+                    <div class="instructions">
+                        <h3>📖 Panduan Cara Penggunaan</h3>
+                        <ol>
+                            <li><strong>🚨 PENTING - Cara Mengaktifkan Bot:</strong> Silakan scan QR Code di atas <strong>HANYA MENGGUNAKAN Akun WhatsApp yang akan dijadikan sebagai Nomor Resmi Pengaduan</strong>. Jangan di-scan menggunakan nomor pribadi Anda! <br><em>(Buka aplikasi WhatsApp di HP tersebut ➔ ketuk menu Perangkat Taut / Linked Devices ➔ lalu arahkan kamera ke gambar QR).</em></li>
+                            <li><strong>Tunggu Proses Loading:</strong> Setelah di-scan, HP Anda mungkin akan menampilkan tulisan "Masuk / Logging in" yang bisa memakan waktu hingga 5 menit. <strong>Tolong bersabar!</strong> Jangan di-refresh atau ditutup halamannya sampai Status di atas berubah menjadi <span style="color: #25D366; font-weight: bold;">Connected</span>.</li>
+                            <li><strong>Sudah Selesai!</strong> Jika status sudah Connected, berarti bot sudah siap bekerja otomatis 24 jam penuh. Anda sudah boleh menutup halaman web ini.</li>
+                            <li><strong>Mengecek Daftar Keluhan:</strong> Semua pesan keluhan akan otomatis diketik dan disusun rapi ke dalam <a href="https://docs.google.com/spreadsheets/d/1HuCkq8Fm74R5B7Kiioovn5DBKw7KbexOUBXDNk6sXlA/edit?usp=sharing" target="_blank" style="color: #128C7E; font-weight: bold; text-decoration: underline;">Google Sheet Pengaduan</a> Anda. Anda tidak perlu melihatnya di web ini lagi.</li>
+                            <li><strong>Catatan Penting:</strong> Anda hanya perlu melakukan scan QR Code ini <em>satu kali saja seumur hidup</em>. Anda tidak perlu repot-repot scan ulang besok-besok, kecuali Anda tidak sengaja memencet tombol "Keluar / Log out" di HP.</li>
+                        </ol>
+                    </div>
                 </div>
             </body>
         </html>
